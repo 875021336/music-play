@@ -4,57 +4,260 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>musicplayer</title>
+    <link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <!-- 播放器容器 -->
-    <div class="player">
-        <!-- 播放器名称 -->
-        <div class="header">音乐播放器</div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            height: 100%;
+        }
 
-        <!-- 音乐专辑图 -->
-        <div class="albumPic"></div>
+        .cover {
+            position: absolute;
+            content: '';
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: url(https://875021336.github.io/music-play/img/albumPic.jpg)center center no-repeat;
+            background-size: cover;
+        }
+        .musicbox {
+            position: absolute;
+            left: 50%;
+            top: 80%;
+            transform: translate(-50%,-50%);
+            font-size: 16px;
+            color: #007acc;
+            width: 340px;
+        }
+        .music-panel {
+            border: 1px solid rgba(155,151,151,0.5);
+            padding: 20px 20px 5px 20px;
+            box-shadow: 0px 2px 5px 0px rgba(49,48,48,0.1);
+            background-color: white;
+            border-radius: 15px;
+        }
+        .musicbox .control {
+            margin-top: 20px;
+            font-size: 22px;
+            color: #808080;
+            float: left;
+        }
+        .musicbox .control .fa {
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        .musicbox .info {
+            margin-left: 120px;
+        }
+        .musicbox .info .title {
+            font-size: 18px;
+        }
+        .musicbox .info .auther {
+            font-size: 13px;
+        }
+        .musicbox .progress {
+            width: 260px;
+        }
+        .musicbox .progress-now {
+            position: absolute;
+            background-color: #007acc;
+            height: 3px;
+            width: 5px;
+            top: 80%;
+            left: 6%;
+        }
+        .musicbox .progress-total {
+            position: absolute;
+            background-color: rgb(61,60,61);
+            height: 3px;
+            width: 210px;
+            top: 80%;
+            left: 6%;
+        }
+        .musicbox .time {
+            text-align: right;
+        }
+        .musicbox:after,
+        .musicbox .music:after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+        .musicbox .list {
+            list-style: none;
+        }
+        .musicbox .list>li {
+            position: relative;
+            padding: 4px 10px;
+            border: 1px solid rgba(255,255,255,0.8);
+            border-top: none;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .musicbox .list>li:hover {
+            background-color: rgba(3, 3, 3, 0.5);
+        }
+        .musicbox .list>li.playing:before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 30px;
+            background: rgba(12, 12, 12, 0.8);
+        }
+    </style>
+    <!-- 背景 -->
+    <div class="cover"></div>
 
-        <!-- 音乐信息 -->
-        <div class="trackInfo">
-            <!-- 歌曲名 -->
-            <div class="name"></div>
-            <!-- 歌手 -->
-            <div class="artist"></div>
-            <!-- 专辑名 -->
-            <div class="album"></div>            
+    <!-- 音乐盒 -->
+    <div class="musicbox">
+        <div class="music-panel">
+            <div class="music">
+                <!-- 音乐控件 -->
+                <div class="control">
+                    <span class="back"><i class="fa fa-step-backward"></i></span>
+                    <span class="play"><i class="fa fa-pause"></i></span>
+                    <span class="forward"><i class="fa fa-step-forward"></i></span>
+                </div>
+                <!-- 音乐信息 -->
+                <div class="info">
+                    <div class="title">My song</div>
+                    <div class="auther">chen</div>
+                </div>
+            </div>
+
+            <div class="progress">
+                <!-- 音乐进度条 -->
+                <div class="bar">
+                    <div class="progress-total"></div>
+                    <div class="progress-now"></div>
+                </div>
+                <div class="time">0:00</div>
+            </div>
         </div>
 
-        <!-- 播放进度条 -->
-        <div class="progress"></div>
-
-        <!-- 控制区 -->
-        <div class="controls">
-            <!-- 播放 -->
-            <div class="player">
-                <i class="icon-player"></i>
-            </div>
-            <!-- 上一曲 -->
-            <div class="previous">
-                <i class="icon-previous"></i>
-            </div>
-            <!-- 下一曲 -->
-            <div class="next">
-                <i class="icon-next"></i>
-            </div>
-        </div>
-
-        <!-- 播放时间 -->
-        <div class="time">
-            <!-- 当前时间 -->
-            <div class="current"></div>
-            <!-- 歌曲总时间 -->
-            <div class="total"></div>
-        </div>
-
-        <!--音频控件 -->
-        <audio src="" id="audio"></audio>
+        <ul class="list">
+             <!--<li>带我走-沈以诚<i class="fa fa-play"></i></li> -->
+        </ul>
     </div>
+<script>
+    var musicList = [{
+    "src": "https://875021336.github.io/music-play/music/RA,BK.%20-%20%E7%8F%8D%E7%8F%A0.mp3",
+    "title": "珍珠",
+    "auther": "RA/BK",
+    "img": "https://875021336.github.io/music-play/img/3-zz.jpg"
+    },{
+    "src": "https://875021336.github.io/music-play/music/%E5%AD%9F%E5%A4%A7%E5%AE%9D%20-%20%E5%8E%86%E5%8E%86%E4%B8%87%E4%B9%A1%EF%BC%88Cover%20%E9%99%88%E7%B2%92%EF%BC%89.mp3",
+    "title": "历历万乡",
+    "auther": "孟大宝",
+    "img": "https://875021336.github.io/music-play/img/1-li.jpg"
+    },{
+    "src": "https://875021336.github.io/music-play/music/Alex%20Goot,Andie%20Case%20-%20Shape%20of%20You.mp3",
+    "title": "shape of you",
+    "auther": "Ed sheeran",
+    "img": "https://875021336.github.io/music-play/img/2-sh.jpg"
+    },{
+    "src": "https://875021336.github.io/music-play/music/%E6%B2%88%E4%BB%A5%E8%AF%9A%20-%20%E8%8F%B2%E8%8F%B2.mp3",
+    "title": "菲菲",
+    "auther": "沈以诚",
+    "img": "https://875021336.github.io/music-play/img/4-ff.jpg"
+    }]
 
+    var currentIndex = 0
+    var audio = new Audio()
+    audio.autoplay = true
+    
+    getMusicList(function(list){
+        musicList = list
+        loadMusic(list[currentIndex])
+        generateList(list)
+    })
+
+    audio.ontimeupdate = function(){
+        $('.musicbox .progress-now').style.width = (this.currentTime/this.duration)*100 + '%'
+    }
+    audio.onplay = function(){
+        clock = setInterval(function(){
+            var min = Math.floor(audio.currentTime/60)
+            var sec = Math.floor(audio.currentTime)%60 + ''
+            sec = sec.length === 2? sec : '0' + sec
+            $('.musicbox .time').innerText = min + ':' + sec
+        },1000)
+    }
+    audio.onpause = function(){
+        clearInterval(block)
+    }
+    audio.onended = function(){
+        console.log('end')
+        currentIndex = (++currentIndex)%musicList.length
+        loadMusic(musicList[currentIndex])
+    }
+    $('.musicbox .play').onclick = function(){
+      if(audio.paused){
+        audio.play()
+        this.querySelector('.fa').classList.remove('fa-play')
+        this.querySelector('.fa').classList.add('fa-pause')
+      }else {
+        audio.pause()
+        this.querySelector('.fa').classList.add('fa-play')
+        this.querySelector('.fa').classList.remove('fa-pause')
+      }
+    }
+    $('.musicbox .forward').onclick = function(){
+      currentIndex =  (++currentIndex)%musicList.length
+      loadMusic(musicList[currentIndex])
+    }
+    $('.musicbox .back').onclick = function(){
+      currentIndex =  (musicList.length + --currentIndex)%musicList.length
+      loadMusic(musicList[currentIndex])
+    }
+    $('.musicbox .bar').onclick = function(e){
+      console.log(e)
+      var percent = e.offsetX / parseInt(getComputedStyle(this).width)
+      console.log(percent)
+      audio.currentTime = audio.duration * percent
+    }
+
+    function $(selector){
+        return document.querySelector(selector)
+    }
+
+    function getMusicList(callback){
+        var xhr = new XMLHttpRequest()
+        xhr.open('GET','https://875021336.github.io/music-play/music.json',true)
+        xhr.onload = function(){
+            if((xhr.status >=200 && xhr.status < 300) || xhr.status === 304){
+                callback(JSON.parse(this.responseText))
+            }else{
+                console.log('获取数据失败')
+            }
+        }
+        xhr.onerror = function(){
+            console.log('网络异常')
+        }
+        xhr.send()
+    } 
+
+
+
+    function loadMusic(musicObj){
+        console.log('begin play',musicObj)
+        $('.musicbox .title').innerText = musicObj.title
+        $('.musicbox .auther').innerText = musicObj.auther
+        $('.cover').style.backgroundImage = 'url(' + musicObj.img + ')'
+        audio.src = musicObj.src
+    }
+    function generateList(list){
+
+    }
+</script>
 </body>
 </html>
